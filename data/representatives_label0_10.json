@@ -1,0 +1,280 @@
+[
+  {
+    "filepath": "/home/wubolun/data/codevul/SARD/c/102475/src/testcases/CWE416_Use_After_Free/CWE416_Use_After_Free__new_delete_array_wchar_t_07.cpp",
+    "coi_line": 94,
+    "coi_type": "call",
+    "node_line": [
+      "static int staticFive = 5 ;",
+      "static void goodB2G2 ( )",
+      "wchar_t * data ;",
+      "data = NULL ;",
+      "if ( staticFive == 5 )",
+      "data = new wchar_t [ 100 ] ;",
+      "wmemset ( data , L'A' , 100 - 1 ) ;",
+      "data [ 100 - 1 ] = L'\\0' ;",
+      "delete [ ] data ;"
+    ],
+    "node_line_sym": [
+      "static int VAR1 = 5 ;",
+      "static void FUN1 ( )",
+      "wchar_t * VAR2 ;",
+      "VAR2 = NULL ;",
+      "if ( VAR1 == 5 )",
+      "VAR2 = new wchar_t [ 100 ] ;",
+      "wmemset ( VAR2 , VAR3'' , 100 - 1 ) ;",
+      "VAR2 [ 100 - 1 ] = VAR3'' ;",
+      "delete [ ] VAR2 ;"
+    ],
+    "result": "### Analysis:\n- **[line 1]:** `static int staticFive = 5;`  \n  [logic of the code] This line initializes a static integer variable `staticFive` with the value 5.  \n  [reason for the vulnerability judgment] There is no potential vulnerability in this line.  \n  [vulnerability: no]\n\n- **[line 2]:** `static void goodB2G2 ( )`  \n  [logic of the code] This line declares a static function `goodB2G2`.  \n  [reason for the vulnerability judgment] There is no potential vulnerability in this line.  \n  [vulnerability: no]\n\n- **[line 3]:** `wchar_t * data ;`  \n  [logic of the code] This line declares a pointer to `wchar_t` named `data`.  \n  [reason for the vulnerability judgment] There is no potential vulnerability in this line.  \n  [vulnerability: no]\n\n- **[line 4]:** `data = NULL ;`  \n  [logic of the code] This line initializes the `data` pointer to `NULL`.  \n  [reason for the vulnerability judgment] There is no potential vulnerability in this line.  \n  [vulnerability: no]\n\n- **[line 5]:** `if ( staticFive == 5 )`  \n  [logic of the code] This line checks if `staticFive` is equal to 5.  \n  [reason for the vulnerability judgment] Since `staticFive` is always 5, this condition will always be true. And there is no potential vulnerability in this line.  \n  [vulnerability: no]\n\n- **[line 6]:** `data = new wchar_t [ 100 ] ;`  \n  [logic of the code] This line allocates memory for an array of 100 `wchar_t` and assigns the pointer to `data`.  \n  [reason for the vulnerability judgment] There is no potential vulnerability in this line.  \n  [vulnerability: no]\n\n- **[line 7]:** `wmemset ( data , L'A' , 100 - 1 ) ;`  \n  [logic of the code] This line fills the first 99 elements of the `data` array with the character `L'A'`.  \n  [reason for the vulnerability judgment] According to condition 2, data is the destination of data allocation, and We should analyze whether there are vulnerabilities. Data is assigned 100 elements, which is enough to accommodate 99 characters `L'A'`. There is no potential vulnerability in this line.  \n  [vulnerability: no]\n\n- **[line 8]:** `data [ 100 - 1 ] = L'\u0000' ;`  \n  [logic of the code] This line sets the last element of the `data` array to the null character `L'\u0000'`.  \n  [reason for the vulnerability judgment] There is no potential vulnerability in this line.  \n  [vulnerability: no]\n\n- **[line 9]:** `delete [ ] data ;`  \n  [logic of the code] This line deallocates the memory allocated for the `data` array.  \n  [reason for the vulnerability judgment] There is no potential vulnerability in this line.  \n  [vulnerability: no]\n\n### Check:\n- **lines with vulnerabilities before checking:** None\n- **[condition 1]:** The slice is incomplete, but we are not considering missing definitions or lack of initialization as vulnerabilities. [Met]\n- **[condition 2]:** The variable `data` is used as the destination of data allocation, so it does not fall under the special case where `data` is not the destination. So I did an analysis, but there were no vulnerabilities. [Met]\n- **[condition 3]:** We have analyzed the currently visible code logic without speculating on potential issues or possible vulnerabilities. [Met]\n- **lines with vulnerabilities after checking:** None\n\n### final_result: no\n\nThere are no definite vulnerabilities that will be triggered in the provided code slice.",
+    "vul_line_no": [],
+    "label": 0
+  },
+  {
+    "filepath": "/home/wubolun/data/codevul/CVEfixes_v1.0.0/c/CVE-2015-3212/7801f5b9825b67685bfb694467bf4f06_after.c",
+    "coi_line": 11,
+    "coi_type": "call",
+    "node_line": [
+      "static inline void sctp_copy_descendant ( struct sock * sk_to ,",
+      "const struct sock * sk_from )",
+      "if ( sk_from -> sk_family == PF_INET6 )",
+      "ancestor_size += sizeof ( struct ipv6_pinfo ) ;",
+      "__inet_sk_copy_descendant ( sk_to , sk_from , ancestor_size ) ;"
+    ],
+    "node_line_sym": [
+      "static inline void FUN1 ( struct VAR1 * VAR2 ,",
+      "const struct VAR1 * VAR3 )",
+      "if ( VAR3 -> VAR4 == VAR5 )",
+      "VAR6 += sizeof ( struct VAR7 ) ;",
+      "FUN2 ( VAR2 , VAR3 , VAR6 ) ;"
+    ],
+    "result": "Analysis:\n[line 1]: `static inline void sctp_copy_descendant ( struct sock * sk_to, const struct sock * sk_from )`\n[logic of the code] This line defines a function `sctp_copy_descendant` that takes two arguments: a pointer to a `struct sock` (`sk_to`) and a constant pointer to a `struct sock` (`sk_from`).\n[reason for the vulnerability judgment] There is no vulnerability in this line as it is just a function declaration.\n[vulnerability: no]\n\n[line 2]: `if ( sk_from -> sk_family == PF_INET6 )`\n[logic of the code] This line checks if the `sk_family` member of the `sk_from` structure is equal to `PF_INET6`.\n[reason for the vulnerability judgment] There is no vulnerability in this line as it is just a conditional check. The condition is not relevant to the analysis since we are treating each line as if it must be executed.\n[vulnerability: no]\n\n[line 3]: `ancestor_size += sizeof ( struct ipv6_pinfo ) ;`\n[logic of the code] This line increments the `ancestor_size` variable by the size of the `struct ipv6_pinfo`.\n[reason for the vulnerability judgment] There is no definition or initialization of `ancestor_size` in the provided code slice. However, according to the conditions, we should not consider this as a vulnerability because the slice is incomplete and may be missing definitions or initializations.\n[vulnerability: no]\n\n[line 4]: `__inet_sk_copy_descendant ( sk_to , sk_from , ancestor_size ) ;`\n[logic of the code] This line calls the `__inet_sk_copy_descendant` function with the `sk_to`, `sk_from`, and `ancestor_size` as arguments.\n[reason for the vulnerability judgment] There is no vulnerability in this line as it is just a function call. The value of `ancestor_size` is used, but since we are not considering the lack of initialization as a vulnerability, this line is also not vulnerable.\n[vulnerability: no]\n\nCheck:\nlines with vulnerabilities before checking: []\n[condition 1]: [analysis] The slice is incomplete, and there may be missing definitions or lack of initialization, which we have not considered as vulnerabilities. [whether the condition is met: yes]\n[condition 2]: [analysis] The value of `data` is not involved in this code slice, so this condition does not apply. [whether the condition is met: yes]\n[condition 3]: [analysis] We have only analyzed the currently visible code logic without speculating on potential issues or possible vulnerabilities. [whether the condition is met: yes]\nlines with vulnerabilities after checking: []\nfinal_result: no",
+    "vul_line_no": [],
+    "label": 0
+  },
+  {
+    "filepath": "/home/wubolun/data/codevul/CVEfixes_v1.0.0/c/CVE-2014-9728/7ad5a4420b4a806738acfb448ca1cf83_before.c",
+    "coi_line": 16,
+    "coi_type": "math",
+    "node_line": [
+      "static int udf_symlink_filler ( struct file * file , struct page * page )",
+      "struct inode * inode = page -> mapping -> host ;",
+      "unsigned char * symlink ;",
+      "struct udf_inode_info * iinfo ;",
+      "iinfo = UDF_I ( inode ) ;",
+      "if ( iinfo -> i_alloc_type == ICBTAG_FLAG_AD_IN_ICB ) {",
+      "symlink = iinfo -> i_ext . i_data + iinfo -> i_lenEAttr ;",
+      "udf_pc_to_char ( inode -> i_sb , symlink , inode -> i_size , p ) ;"
+    ],
+    "node_line_sym": [
+      "static int FUN1 ( struct VAR1 * VAR1 , struct VAR2 * VAR2 )",
+      "struct VAR3 * VAR3 = VAR2 -> VAR4 -> VAR5 ;",
+      "unsigned char * symlink ;",
+      "struct VAR6 * VAR7 ;",
+      "VAR7 = FUN2 ( VAR3 ) ;",
+      "if ( VAR7 -> VAR8 == VAR9 ) {",
+      "symlink = VAR7 -> VAR10 . VAR11 + VAR7 -> VAR12 ;",
+      "FUN3 ( VAR3 -> VAR13 , symlink , VAR3 -> VAR14 , VAR15 ) ;"
+    ],
+    "result": "### Analysis:\n**[line 1]:**\n```c++\nstatic int udf_symlink_filler ( struct file * file , struct page * page )\n```\n- **[logic of the code]**: This line is a function declaration. It does not contain any executable logic.\n- **[reason for the vulnerability judgment]**: No vulnerability can be identified in a function declaration.\n- **[vulnerability: no]**\n\n**[line 2]:**\n```c++\nstruct inode * inode = page -> mapping -> host ;\n```\n- **[logic of the code]**: This line assigns the `host` member of `page->mapping` to a pointer `inode`.\n- **[reason for the vulnerability judgment]**: This is a simple assignment and does not introduce any vulnerabilities.\n- **[vulnerability: no]**\n\n**[line 3]:**\n```c++\nunsigned char * symlink ;\n```\n- **[logic of the code]**: This line declares a pointer `symlink` of type `unsigned char*`.\n- **[reason for the vulnerability judgment]**: Declaration of a variable does not introduce any vulnerabilities.\n- **[vulnerability: no]**\n\n**[line 4]:**\n```c++\nstruct udf_inode_info * iinfo ;\n```\n- **[logic of the code]**: This line declares a pointer `iinfo` of type `struct udf_inode_info*`.\n- **[reason for the vulnerability judgment]**: Declaration of a variable does not introduce any vulnerabilities.\n- **[vulnerability: no]**\n\n**[line 5]:**\n```c++\niinfo = UDF_I ( inode ) ;\n```\n- **[logic of the code]**: This line assigns the result of `UDF_I(inode)` to `iinfo`.\n- **[reason for the vulnerability judgment]**: This is a simple assignment and does not introduce any vulnerabilities.\n- **[vulnerability: no]**\n\n**[line 6]:**\n```c++\nif ( iinfo -> i_alloc_type == ICBTAG_FLAG_AD_IN_ICB ) {\n```\n- **[logic of the code]**: This line checks if `iinfo->i_alloc_type` is equal to `ICBTAG_FLAG_AD_IN_ICB`.\n- **[reason for the vulnerability judgment]**: This is a conditional check and does not introduce any vulnerabilities.\n- **[vulnerability: no]**\n\n**[line 7]:**\n```c++\nsymlink = iinfo -> i_ext . i_data + iinfo -> i_lenEAttr ;\n```\n- **[logic of the code]**: This line assigns the address of `iinfo->i_ext.i_data` plus `iinfo->i_lenEAttr` to `symlink`.\n- **[reason for the vulnerability judgment]**: This is a simple pointer arithmetic and does not introduce any vulnerabilities.\n- **[vulnerability: no]**\n\n**[line 8]:**\n```c++\nudf_pc_to_char ( inode -> i_sb , symlink , inode -> i_size , p ) ;\n```\n- **[logic of the code]**: This line calls the function `udf_pc_to_char` with arguments `inode->i_sb`, `symlink`, `inode->i_size`, and `p`.\n- **[reason for the vulnerability judgment]**: The function call `udf_pc_to_char` is made, but without knowing the implementation of `udf_pc_to_char` or the value of `p`, it is not possible to determine if there is a vulnerability. However, since the variable name `data` is not involved, we cannot consider this as a vulnerability based on the given conditions.\n- **[vulnerability: no]**\n\n### Check:\n- **lines with vulnerabilities before checking**: []\n- **[condition 1]**: [analysis] The analysis treats each line of the slice as code that must be executed, ignoring the restrictions of branch conditions. [whether the condition is met: yes]\n- **[condition 2]**: [analysis] The analysis does not consider variables or functions that are unknown, except for the variable `data`. Since `data` is not present, this condition is met. [whether the condition is met: yes]\n- **[condition 3]**: [analysis] The analysis only considers the currently visible code logic without speculating on potential issues or possible vulnerabilities. [whether the condition is met: yes]\n- **lines with vulnerabilities after checking**: []\n\n**final_result: no**",
+    "vul_line_no": [],
+    "label": 0
+  },
+  {
+    "filepath": "/home/wubolun/data/codevul/SARD/c/240298/src/testcases/CWE416_Use_After_Free/CWE416_Use_After_Free__malloc_free_int64_t_16.c",
+    "coi_line": 96,
+    "coi_type": "call",
+    "node_line": [
+      "static void goodG2B ( )",
+      "int64_t * data ;",
+      "data = NULL ;",
+      "while ( 1 )",
+      "data = ( int64_t * ) malloc ( 100 * sizeof ( int64_t ) ) ;",
+      "if ( data == NULL ) { exit ( - 1 ) ; }",
+      "data [ i ] = 5LL ;",
+      "printLongLongLine ( data [ 0 ] ) ;",
+      "void CWE416_Use_After_Free__malloc_free_int64_t_16_good ( )",
+      "goodG2B ( ) ;"
+    ],
+    "node_line_sym": [
+      "static void FUN1 ( )",
+      "VAR1 * VAR2 ;",
+      "VAR2 = NULL ;",
+      "while ( 1 )",
+      "VAR2 = ( VAR1 * ) malloc ( 100 * sizeof ( VAR1 ) ) ;",
+      "if ( VAR2 == NULL ) { FUN2 ( - 1 ) ; }",
+      "VAR2 [ VAR3 ] = 5LL ;",
+      "FUN3 ( VAR2 [ 0 ] ) ;",
+      "void FUN4 ( )",
+      "FUN1 ( ) ;"
+    ],
+    "result": "### Analysis:\n#### [line 1]: `static void goodG2B ( )`\n- **[logic of the code]**: This line declares a static function named `goodG2B`.\n- **[reason for the vulnerability judgment]**: This is just a function declaration and does not contain any executable code.\n- **[vulnerability: no]**\n\n#### [line 2]: `int64_t * data ;`\n- **[logic of the code]**: This line declares a pointer to `int64_t` named `data`.\n- **[reason for the vulnerability judgment]**: This is a simple variable declaration and does not contain any executable code.\n- **[vulnerability: no]**\n\n#### [line 3]: `data = NULL ;`\n- **[logic of the code]**: This line initializes the `data` pointer to `NULL`.\n- **[reason for the vulnerability judgment]**: This is a safe initialization and does not introduce any vulnerabilities.\n- **[vulnerability: no]**\n\n#### [line 4]: `while ( 1 )`\n- **[logic of the code]**: This line starts an infinite loop.\n- **[reason for the vulnerability judgment]**: The loop itself does not introduce a vulnerability, but it can lead to resource exhaustion if not properly terminated.\n- **[vulnerability: no]**\n\n#### [line 5]: `data = ( int64_t * ) malloc ( 100 * sizeof ( int64_t ) ) ;`\n- **[logic of the code]**: This line allocates memory for 100 `int64_t` elements and assigns the pointer to `data`.\n- **[reason for the vulnerability judgment]**: Memory allocation is done correctly, and the cast to `int64_t*` is safe.\n- **[vulnerability: no]**\n\n#### [line 6]: `if ( data == NULL ) { exit ( - 1 ) ; }`\n- **[logic of the code]**: This line checks if the memory allocation was successful. If `data` is `NULL`, the program exits with an error code.\n- **[reason for the vulnerability judgment]**: This is a safe check and prevents dereferencing a null pointer.\n- **[vulnerability: no]**\n\n#### [line 7]: `data [ i ] = 5LL ;`\n- **[logic of the code]**: This line attempts to assign the value `5LL` to the `i`-th element of the `data` array.\n- **[reason for the vulnerability judgment]**: The index `i` is not defined in the provided code slice. Since `i` is unknown, we cannot determine if this access is within bounds or out of bounds. However, according to the conditions, we should not consider this as a vulnerability unless `i` is `data`.\n- **[vulnerability: no]**\n\n#### [line 8]: `printLongLongLine ( data [ 0 ] ) ;`\n- **[logic of the code]**: This line prints the first element of the `data` array.\n- **[reason for the vulnerability judgment]**: Accessing the first element of the array is safe, assuming the memory allocation was successful.\n- **[vulnerability: no]**\n\n#### [line 9]: `void CWE416_Use_After_Free__malloc_free_int64_t_16_good ( )`\n- **[logic of the code]**: This line declares a function named `CWE416_Use_After_Free__malloc_free_int64_t_16_good`.\n- **[reason for the vulnerability judgment]**: This is just a function declaration and does not contain any executable code.\n- **[vulnerability: no]**\n\n#### [line 10]: `goodG2B ( ) ;`\n- **[logic of the code]**: This line calls the `goodG2B` function.\n- **[reason for the vulnerability judgment]**: This is a function call and does not introduce any vulnerabilities.\n- **[vulnerability: no]**\n\n### Check:\n- **lines with vulnerabilities before checking**: []\n- **[condition 1]**: The slice is incomplete, and there may be missing definitions or lack of initialization. We have not considered these as vulnerabilities.\n  - **[analysis]**: We have treated each line as a code that must be executed, ignoring the restrictions of branch conditions.\n  - **[whether the condition is met]**: Yes\n- **[condition 2]**: Whether the vulnerability is triggered depends on an unknown variable value, an unknown function, or other things you are unsure of from the code. We have not considered these as vulnerabilities, except for the case where the variable name is 'data' and 'data' is not the destination of data allocation.\n  - **[analysis]**: The only unknown variable is `i` in `data[i] = 5LL;`, but it is not `data` and thus not considered a vulnerability.\n  - **[whether the condition is met]**: Yes\n- **[condition 3]**: We have only analyzed the currently visible code logic without speculating on potential issues or possible vulnerabilities.\n  - **[analysis]**: We have strictly followed the provided code and conditions.\n  - **[whether the condition is met]**: Yes\n\n- **lines with vulnerabilities after checking**: []\n\n**final_result: no**",
+    "vul_line_no": [],
+    "label": 0
+  },
+  {
+    "filepath": "/home/wubolun/data/codevul/SARD/c/77030/src/testcases/CWE126_Buffer_Overread/s03/CWE126_Buffer_Overread__wchar_t_declare_memmove_33.cpp",
+    "coi_line": 65,
+    "coi_type": "array",
+    "node_line": [
+      "static void goodG2B ( )",
+      "wchar_t dataBadBuffer [ 50 ] ;",
+      "wmemset ( dataBadBuffer , L'A' , 50 - 1 ) ;",
+      "dataBadBuffer [ 50 - 1 ] = L'\\0' ;"
+    ],
+    "node_line_sym": [
+      "static void FUN1 ( )",
+      "wchar_t VAR1 [ 50 ] ;",
+      "wmemset ( VAR1 , VAR2'' , 50 - 1 ) ;",
+      "VAR1 [ 50 - 1 ] = VAR2'' ;"
+    ],
+    "result": "### Analysis:\n- **[line 1]:** `static void goodG2B ( )`\n  - **[logic of the code]:** This line declares a static function named `goodG2B`.\n  - **[reason for the vulnerability judgment]:** This is a function declaration and does not contain any executable code. There is no potential vulnerability here.\n  - **[vulnerability: no]**\n\n- **[line 2]:** `wchar_t dataBadBuffer [ 50 ] ;`\n  - **[logic of the code]:** This line declares an array `dataBadBuffer` of type `wchar_t` with a size of 50.\n  - **[reason for the vulnerability judgment]:** This is a simple array declaration and does not contain any executable code. There is no potential vulnerability here.\n  - **[vulnerability: no]**\n\n- **[line 3]:** `wmemset ( dataBadBuffer , L'A' , 50 - 1 ) ;`\n  - **[logic of the code]:** This line initializes the first 49 elements of `dataBadBuffer` with the wide character `L'A'`.\n  - **[reason for the vulnerability judgment]:** The `wmemset` function is used correctly to fill 49 elements of the 50-element array, leaving space for the null terminator.\n  - **[vulnerability: no]**\n\n- **[line 4]:** `dataBadBuffer [ 50 - 1 ] = L'\u0000' ;`\n  - **[logic of the code]:** This line sets the 50th element of `dataBadBuffer` to the null terminator `L'\u0000'`.\n  - **[reason for the vulnerability judgment]:** This is a correct way to null-terminate the `wchar_t` array, ensuring that it is properly terminated.\n  - **[vulnerability: no]**\n\n### Check:\n- **lines with vulnerabilities before checking:** []\n- **[condition 1]:** The slice is incomplete, but there are no missing definitions or lack of initialization that would be considered as vulnerabilities.\n  - **[analysis]:** The provided code is self-contained and does not rely on external variables or functions that are not defined in the slice.\n  - **[whether the condition is met]:** Yes\n- **[condition 2]:** Whether the vulnerability is triggered depends on an unknown variable value, an unknown function, or other things you are unsure of from the code, it should not be considered a vulnerability.\n  - **[analysis]:** There are no unknown variables or functions in the provided code.\n  - **[whether the condition is met]:** Yes\n- **[condition 3]:** Only analyze the currently visible code logic, without speculating on potential issues or possible vulnerabilities.\n  - **[analysis]:** The analysis is based solely on the provided code and does not speculate on potential issues.\n  - **[whether the condition is met]:** Yes\n- **lines with vulnerabilities after checking:** []\n\n### final_result: no",
+    "vul_line_no": [],
+    "label": 0
+  },
+  {
+    "filepath": "/home/wubolun/data/codevul/SARD/c/63754/src/testcases/CWE121_Stack_Based_Buffer_Overflow/s03/CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_memmove_03.c",
+    "coi_line": 69,
+    "coi_type": "array",
+    "node_line": [
+      "static void goodG2B1 ( )",
+      "wchar_t * data ;",
+      "wchar_t dataGoodBuffer [ 10 + 1 ] ;",
+      "if ( 5 != 5 )",
+      "data = dataGoodBuffer ;",
+      "data [ 0 ] = L'\\0' ;",
+      "memmove ( data , source , ( wcslen ( source ) + 1 ) * sizeof ( wchar_t ) ) ;",
+      "printWLine ( data ) ;",
+      "void CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_memmove_03_good ( )",
+      "goodG2B1 ( ) ;"
+    ],
+    "node_line_sym": [
+      "static void FUN1 ( )",
+      "wchar_t * VAR1 ;",
+      "wchar_t VAR2 [ 10 + 1 ] ;",
+      "if ( 5 != 5 )",
+      "VAR1 = VAR2 ;",
+      "VAR1 [ 0 ] = VAR3'' ;",
+      "memmove ( VAR1 , VAR4 , ( wcslen ( VAR4 ) + 1 ) * sizeof ( wchar_t ) ) ;",
+      "FUN2 ( VAR1 ) ;",
+      "void FUN3 ( )",
+      "FUN1 ( ) ;"
+    ],
+    "result": "### Analysis:\n**[line 1]: `static void goodG2B1 ( )`**\n- **[logic of the code]**: This line defines a static function named `goodG2B1`.\n- **[reason for the vulnerability judgment]**: This is a function declaration and does not contain any executable code.\n- **[vulnerability: no]**\n\n**[line 2]: `wchar_t * data ;`**\n- **[logic of the code]**: This line declares a pointer to `wchar_t` named `data`.\n- **[reason for the vulnerability judgment]**: This is just a declaration and does not contain any executable code.\n- **[vulnerability: no]**\n\n**[line 3]: `wchar_t dataGoodBuffer [ 10 + 1 ] ;`**\n- **[logic of the code]**: This line declares an array of `wchar_t` with a size of 11, named `dataGoodBuffer`.\n- **[reason for the vulnerability judgment]**: This is just a declaration and does not contain any executable code.\n- **[vulnerability: no]**\n\n**[line 4]: `if ( 5 != 5 )`**\n- **[logic of the code]**: This line contains a conditional statement that checks if `5` is not equal to `5`.\n- **[reason for the vulnerability judgment]**: The condition `5 != 5` is always false, so the code inside the `if` block will never be executed.\n- **[vulnerability: no]**\n\n**[line 5]: `data = dataGoodBuffer ;`**\n- **[logic of the code]**: This line assigns the address of `dataGoodBuffer` to `data`.\n- **[reason for the vulnerability judgment]**: This line is inside the `if` block, which will never be executed because the condition is always false. But considering Condition 1, all statements will be executed.\n- **[vulnerability: no]**\n\n**[line 6]: `data [ 0 ] = L'' ;`**\n- **[logic of the code]**: This line sets the first element of `data` to the null character.\n- **[reason for the vulnerability judgment]**: This is an assignment statement, and data has been initialized, so there is no vulnerability.\n- **[vulnerability: no]**\n\n**[line 7]: `memmove ( data , source , ( wcslen ( source ) + 1 ) * sizeof ( wchar_t ) ) ;`**\n- **[logic of the code]**: This line copies the contents of `source` to `data` using `memmove`.\n- **[reason for the vulnerability judgment]**: This line uses \"memmove\" to copy the contents of \"source\" to \"data\". It contains a variable called data, and data is the destination for data copy, so it should not be considered a vulnerability under Condition 2.\n- **[vulnerability: no]**\n\n**[line 8]: `printWLine ( data ) ;`**\n- **[logic of the code]**: This line prints the contents of `data` using `printWLine`.\n- **[reason for the vulnerability judgment]**: This is a printed statement and there are no vulnerabilities.\n- **[vulnerability: no]**\n\n**[line 9]: `void CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_memmove_03_good ( )`**\n- **[logic of the code]**: This line defines a function named `CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_memmove_03_good`.\n- **[reason for the vulnerability judgment]**: This is a function declaration and does not contain any executable code.\n- **[vulnerability: no]**\n\n**[line 10]: `goodG2B1 ( ) ;`**\n- **[logic of the code]**: This line calls the `goodG2B1` function.\n- **[reason for the vulnerability judgment]**: This is a function call and does not contain any executable code itself.\n- **[vulnerability: no]**\n\n### Check:\n- **lines with vulnerabilities before checking**: []\n- **[condition 1]:** This slice is incomplete. Therefore, there may be missing definitions or lack of initialization, please do not consider them as vulnerabilities. Please treat each line of the slice as a code that must be executed, ignoring the restrictions of branch conditions.\n  - **[analysis]**: The analysis considers each line as if it were executed, and the vulnerabilities are based on the given code.\n  - **[whether the condition is met]**: Yes\n- **[condition 2]:** If whether the vulnerability is triggered depends on an unknown variable value, an unknown function or other thing you are unsure of from the code, it should not be considered a vulnerability. Except for the following cases: the variable name is 'data' and 'data' is not the destination of data allocation, analyze whether there is a potential vulnerability.\n  - **[analysis]**: Line 7 uses \"memmove\" to copy the contents of \"source\" to \"data\". It contains a variable called data, and data is the destination for data copy, so it should not be considered a vulnerability.\n  - **[whether the condition is met]**: Yes\n- **[condition 3]:** Only analyze the currently visible code logic, without speculating on potential issues or possible vulnerabilities.\n  - **[analysis]**: The analysis is based on the visible code logic and does not speculate on potential issues.\n  - **[whether the condition is met]**: Yes\n\n- **lines with vulnerabilities after checking**: []\n\n### final_result: **no**",
+    "vul_line_no": [],
+    "label": 0
+  },
+  {
+    "filepath": "/home/wubolun/data/codevul/SARD/c/64729/src/testcases/CWE121_Stack_Based_Buffer_Overflow/s04/CWE121_Stack_Based_Buffer_Overflow__CWE805_int_declare_memcpy_18.c",
+    "coi_line": 48,
+    "coi_type": "array",
+    "node_line": [
+      "static void goodG2B ( )",
+      "int dataGoodBuffer [ 100 ] ;",
+      "data = dataGoodBuffer ;",
+      "int source [ 100 ] = { 0 } ;",
+      "memcpy ( data , source , 100 * sizeof ( int ) ) ;",
+      "printIntLine ( data [ 0 ] ) ;",
+      "void CWE121_Stack_Based_Buffer_Overflow__CWE805_int_declare_memcpy_18_good ( )",
+      "goodG2B ( ) ;"
+    ],
+    "node_line_sym": [
+      "static void FUN1 ( )",
+      "int VAR1 [ 100 ] ;",
+      "VAR2 = VAR1 ;",
+      "int VAR3 [ 100 ] = { 0 } ;",
+      "memcpy ( VAR2 , VAR3 , 100 * sizeof ( int ) ) ;",
+      "FUN2 ( VAR2 [ 0 ] ) ;",
+      "void FUN3 ( )",
+      "FUN1 ( ) ;"
+    ],
+    "result": "### Analysis:\n\n**[line 1]: `static void goodG2B ( )`**\n- **[logic of the code]**: This line defines a static function named `goodG2B`.\n- **[reason for the vulnerability judgment]**: This is just a function declaration and does not contain any executable code.\n- **[vulnerability: no]**\n\n**[line 2]: `int dataGoodBuffer [ 100 ] ;`**\n- **[logic of the code]**: This line declares an integer array `dataGoodBuffer` with 100 elements.\n- **[reason for the vulnerability judgment]**: This is a simple declaration and initialization of an array. There is no vulnerability in this line.\n- **[vulnerability: no]**\n\n**[line 3]: `data = dataGoodBuffer ;`**\n- **[logic of the code]**: This line assigns the address of `dataGoodBuffer` to the variable `data`.\n- **[reason for the vulnerability judgment]**: The variable `data` is being assigned the address of a properly declared and initialized array. There is no vulnerability in this line.\n- **[vulnerability: no]**\n\n**[line 4]: `int source [ 100 ] = { 0 } ;`**\n- **[logic of the code]**: This line declares and initializes an integer array `source` with 100 elements, all set to 0.\n- **[reason for the vulnerability judgment]**: This is a simple declaration and initialization of an array. There is no vulnerability in this line.\n- **[vulnerability: no]**\n\n**[line 5]: `memcpy ( data , source , 100 * sizeof ( int ) ) ;`**\n- **[logic of the code]**: This line copies 100 integers from the `source` array to the `data` array using `memcpy`.\n- **[reason for the vulnerability judgment]**: The `memcpy` function is used to copy 100 integers (400 bytes) from `source` to `data`. Both `source` and `data` are arrays of 100 integers, so there is no risk of buffer overflow.\n- **[vulnerability: no]**\n\n**[line 6]: `printIntLine ( data [ 0 ] ) ;`**\n- **[logic of the code]**: This line prints the first element of the `data` array.\n- **[reason for the vulnerability judgment]**: This is a simple print statement. There is no vulnerability in this line.\n- **[vulnerability: no]**\n\n**[line 7]: `void CWE121_Stack_Based_Buffer_Overflow__CWE805_int_declare_memcpy_18_good ( )`**\n- **[logic of the code]**: This line defines a function named `CWE121_Stack_Based_Buffer_Overflow__CWE805_int_declare_memcpy_18_good`.\n- **[reason for the vulnerability judgment]**: This is just a function declaration and does not contain any executable code.\n- **[vulnerability: no]**\n\n**[line 8]: `goodG2B ( ) ;`**\n- **[logic of the code]**: This line calls the `goodG2B` function.\n- **[reason for the vulnerability judgment]**: This is a function call. The function itself has been analyzed and found to have no vulnerabilities.\n- **[vulnerability: no]**\n\n### Check:\n- **lines with vulnerabilities before checking:** None\n- **[condition 1]:** All statements are considered to be executed, even if the branch conditions are not met.\n  - **[analysis]**: All lines of code are analyzed as if they are executed.\n  - **[whether the condition is met]**: Yes\n- **[condition 2]:** If whether the vulnerability is triggered depends on an unknown variable value, an unknown function, or other things you are unsure of from the code, it should not be considered a vulnerability. But if it contains a variable named `data`, do the following analysis:\n  - **[If `data` is the destination for data allocation or assignment]**: Not considered a vulnerability.\n  - **[If `data` is the source for data allocation or assignment]**: Analyze whether there are potential vulnerabilities.\n  - **[analysis]**: `data` is the destination for the `memcpy` operation, and it is assigned the address of a properly declared and initialized array. There is no vulnerability here.\n  - **[whether the condition is met]**: Yes\n- **[condition 3]:** Only analyze the currently visible code logic, without speculating on potential issues or possible vulnerabilities.\n  - **[analysis]**: The analysis is based only on the provided code slice.\n  - **[whether the condition is met]**: Yes\n\n- **lines with vulnerabilities after checking:** None\n- **final_result:** No\n\n### Conclusion:\n- **final_result: no**",
+    "vul_line_no": [],
+    "label": 0
+  },
+  {
+    "filepath": "/home/wubolun/data/codevul/SARD/c/63685/src/testcases/CWE121_Stack_Based_Buffer_Overflow/s03/CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_loop_14.c",
+    "coi_line": 82,
+    "coi_type": "math",
+    "node_line": [
+      "static void goodG2B1 ( )",
+      "if ( globalFive != 5 )",
+      "wchar_t source [ 10 + 1 ] = SRC_STRING ;",
+      "size_t i , sourceLen ;",
+      "sourceLen = wcslen ( source ) ;",
+      "for ( i = 0 ; i < sourceLen + 1 ; i ++ )",
+      "data [ i ] = source [ i ] ;",
+      "printWLine ( data ) ;",
+      "void CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_loop_14_good ( )",
+      "goodG2B1 ( ) ;"
+    ],
+    "node_line_sym": [
+      "static void FUN1 ( )",
+      "if ( VAR1 != 5 )",
+      "wchar_t VAR2 [ 10 + 1 ] = VAR3 ;",
+      "size_t VAR4 , VAR5 ;",
+      "VAR5 = wcslen ( VAR2 ) ;",
+      "for ( VAR4 = 0 ; VAR4 < VAR5 + 1 ; VAR4 ++ )",
+      "VAR6 [ VAR4 ] = VAR2 [ VAR4 ] ;",
+      "FUN2 ( VAR6 ) ;",
+      "void FUN3 ( )",
+      "FUN1 ( ) ;"
+    ],
+    "result": "### Analysis:\n#### [line 1]: `static void goodG2B1 ( )`\n- **[logic of the code]**: Declaration of a static function `goodG2B1`.\n- **[reason for the vulnerability judgment]**: This line is just a function declaration and does not contain any logic that could lead to a vulnerability.\n- **[vulnerability: no]**\n\n#### [line 2]: `if ( globalFive != 5 )`\n- **[logic of the code]**: An `if` statement that checks if `globalFive` is not equal to 5.\n- **[reason for the vulnerability judgment]**: The condition `globalFive != 5` determines whether the subsequent code block is executed. If `globalFive` is 5, the code inside the `if` block will not be executed. Since we are considering all statements as executed, we will analyze the code inside the `if` block.\n- **[vulnerability: no]**\n\n#### [line 3]: `wchar_t source [ 10 + 1 ] = SRC_STRING ;`\n- **[logic of the code]**: Declares and initializes a `wchar_t` array `source` with a size of 11 elements, and assigns it the value of `SRC_STRING`.\n- **[reason for the vulnerability judgment]**: This line initializes the `source` array with a string. There is no indication of a vulnerability here.\n- **[vulnerability: no]**\n\n#### [line 4]: `size_t i , sourceLen ;`\n- **[logic of the code]**: Declares two variables `i` and `sourceLen` of type `size_t`.\n- **[reason for the vulnerability judgment]**: This line only declares variables and does not contain any logic that could lead to a vulnerability.\n- **[vulnerability: no]**\n\n#### [line 5]: `sourceLen = wcslen ( source ) ;`\n- **[logic of the code]**: Computes the length of the `source` string and stores it in `sourceLen`.\n- **[reason for the vulnerability judgment]**: This line calculates the length of the `source` string. There is no indication of a vulnerability here.\n- **[vulnerability: no]**\n\n#### [line 6]: `for ( i = 0 ; i < sourceLen + 1 ; i ++ )`\n- **[logic of the code]**: A `for` loop that iterates from 0 to `sourceLen + 1`.\n- **[reason for the vulnerability judgment]**: The loop iterates one more time than the length of the `source` string. This means that `data[i]` will be assigned `source[i]` for `i` from 0 to `sourceLen`, and then one more time, which will access `source[sourceLen]`. Since `source` is a null-terminated string, `source[sourceLen]` is the null terminator. This does not cause an out-of-bounds access, but it might lead to an extra null terminator in `data`.\n- **[vulnerability: no]**\n\n#### [line 7]: `data [ i ] = source [ i ] ;`\n- **[logic of the code]**: Assigns the `i`-th character of `source` to the `i`-th character of `data`.\n- **[reason for the vulnerability judgment]**: The assignment is within the bounds of `source` and `data` as long as `data` is large enough to hold the characters. However, since `data` is not defined in this code slice, we must assume it is properly defined and large enough. The loop iterates one more time than the length of `source`, which means `data` will have an extra null terminator.\n- **[vulnerability: no]**\n\n#### [line 8]: `printWLine ( data ) ;`\n- **[logic of the code]**: Calls the `printWLine` function with `data` as an argument.\n- **[reason for the vulnerability judgment]**: This line prints the contents of `data`. There is no indication of a vulnerability here.\n- **[vulnerability: no]**\n\n#### [line 9]: `void CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_loop_14_good ( )`\n- **[logic of the code]**: Declaration of a function `CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_loop_14_good`.\n- **[reason for the vulnerability judgment]**: This line is just a function declaration and does not contain any logic that could lead to a vulnerability.\n- **[vulnerability: no]**\n\n#### [line 10]: `goodG2B1 ( ) ;`\n- **[logic of the code]**: Calls the `goodG2B1` function.\n- **[reason for the vulnerability judgment]**: This line calls the `goodG2B1` function, which we have already analyzed.\n- **[vulnerability: no]**\n\n### Check:\n- **lines with vulnerabilities before checking**: None\n- **[condition 1]**: This slice is incomplete. Therefore, if you encounter any missing definitions or uninitialized variables, please regard them as defined or initialized. At the same time, all statements are considered to be executed, even if the branch conditions are not met.\n  - **[analysis]**: We have assumed that `data` is properly defined and large enough to hold the characters from `source`.\n  - **[whether the condition is met]**: Yes\n- **[condition 2]**: If whether the vulnerability is triggered depends on an unknown variable value, an unknown function, or other thing you are unsure of from the code, it should not be considered a vulnerability. But if it contains a variable named `data`, do the following analysis:\n  - **[analysis]**: `data` is the destination for data allocation or assignment. According to the condition, this is not considered a vulnerability.\n  - **[whether the condition is met]**: Yes\n- **[condition 3]**: Only analyze the currently visible code logic, without speculating on potential issues or possible vulnerabilities.\n  - **[analysis]**: We have analyzed the code based on the visible logic and have not speculated on potential issues.\n  - **[whether the condition is met]**: Yes\n\n- **lines with vulnerabilities after checking**: None\n\n### final_result: **no**",
+    "vul_line_no": [],
+    "label": 0
+  },
+  {
+    "filepath": "/home/wubolun/data/codevul/SARD/c/236558/src/testcases/CWE190_Integer_Overflow/s06/CWE190_Integer_Overflow__unsigned_int_max_postinc_66b.c",
+    "coi_line": 57,
+    "coi_type": "math",
+    "node_line": [
+      "void CWE190_Integer_Overflow__unsigned_int_max_postinc_66b_goodB2GSink ( unsigned int dataArray [ ] )",
+      "unsigned int data = dataArray [ 2 ] ;",
+      "if ( data < UINT_MAX )",
+      "data ++ ;",
+      "unsigned int result = data ;",
+      "printUnsignedLine ( result ) ;"
+    ],
+    "node_line_sym": [
+      "void FUN1 ( unsigned int VAR1 [ ] )",
+      "unsigned int VAR2 = VAR1 [ 2 ] ;",
+      "if ( VAR2 < VAR3 )",
+      "VAR2 ++ ;",
+      "unsigned int VAR4 = VAR2 ;",
+      "FUN2 ( VAR4 ) ;"
+    ],
+    "result": "### Analysis:\n```c++\nvoid CWE190_Integer_Overflow__unsigned_int_max_postinc_66b_goodB2GSink ( unsigned int dataArray [ ] )\n```\n- **[logic of the code]**: This is the function declaration. It takes an array of `unsigned int` as a parameter.\n- **[reason for the vulnerability judgment]**: No vulnerability can be determined from the function signature alone.\n- **[vulnerability: no]**\n\n```c++\nunsigned int data = dataArray [ 2 ] ;\n```\n- **[logic of the code]**: The variable `data` is assigned the value of `dataArray[2]`.\n- **[reason for the vulnerability judgment]**: According to the conditions, if `data` is the destination for data allocation or assignment, it is not considered a vulnerability.\n- **[vulnerability: no]**\n\n```c++\nif ( data < UINT_MAX )\n```\n- **[logic of the code]**: This condition checks if `data` is less than `UINT_MAX`, which is the maximum value an `unsigned int` can hold.\n- **[reason for the vulnerability judgment]**: This is a safety check to prevent integer overflow.\n- **[vulnerability: no]**\n\n```c++\ndata ++ ;\n```\n- **[logic of the code]**: If the condition `data < UINT_MAX` is true, `data` is incremented by 1.\n- **[reason for the vulnerability judgment]**: Since the condition ensures that `data` is less than `UINT_MAX`, incrementing `data` will not cause an overflow.\n- **[vulnerability: no]**\n\n```c++\nunsigned int result = data ;\n```\n- **[logic of the code]**: The variable `result` is assigned the value of `data`.\n- **[reason for the vulnerability judgment]**: This is a simple assignment and does not introduce any vulnerabilities.\n- **[vulnerability: no]**\n\n```c++\nprintUnsignedLine ( result ) ;\n```\n- **[logic of the code]**: The value of `result` is printed.\n- **[reason for the vulnerability judgment]**: This is a standard output operation and does not introduce any vulnerabilities.\n- **[vulnerability: no]**\n\n### Check:\n- **lines with vulnerabilities before checking**: []\n- **[condition 1]:** The slice is incomplete, but all statements are considered to be executed. This condition is met.\n- **[condition 2]:** The variable `data` is used as the destination for data allocation or assignment, so it is not considered a vulnerability. This condition is met.\n- **[condition 3]:** Only the visible code logic is analyzed without speculation. This condition is met.\n- **lines with vulnerabilities after checking**: []\n\n### final_result: **no**",
+    "vul_line_no": [],
+    "label": 0
+  },
+  {
+    "filepath": "/home/wubolun/data/codevul/CVEfixes_v1.0.0/c/CVE-2020-11668/14d64c093dfe1899b172951ced618571_after.c",
+    "coi_line": 3,
+    "coi_type": "ptr",
+    "node_line": [
+      "static int cit_get_packet_size ( struct gspca_dev * gspca_dev )",
+      "struct usb_host_interface * alt ;",
+      "alt = usb_altnum_to_altsetting ( intf , gspca_dev -> alt ) ;",
+      "if ( ! alt ) {",
+      "pr_err ( \"Couldn't get altsetting\\n\" ) ;",
+      "return - EIO ;",
+      "if ( alt -> desc . bNumEndpoints < 1 )",
+      "return - ENODEV ;",
+      "return le16_to_cpu ( alt -> endpoint [ 0 ] . desc . wMaxPacketSize ) ;"
+    ],
+    "node_line_sym": [
+      "static int FUN1 ( struct VAR1 * VAR1 )",
+      "struct VAR2 * VAR3 ;",
+      "VAR3 = FUN2 ( VAR4 , VAR1 -> VAR3 ) ;",
+      "if ( ! VAR3 ) {",
+      "FUN3 ( \"\" ) ;",
+      "return - VAR5 ;",
+      "if ( VAR3 -> VAR6 . VAR7 < 1 )",
+      "return - VAR8 ;",
+      "return FUN4 ( VAR3 -> VAR9 [ 0 ] . VAR6 . VAR10 ) ;"
+    ],
+    "result": "### Analysis:\n```c++\nstatic int cit_get_packet_size ( struct gspca_dev * gspca_dev )\n```\n- **[logic of the code]**: This is the function signature for `cit_get_packet_size` which takes a pointer to a `gspca_dev` structure.\n- **[reason for the vulnerability judgment]**: No vulnerabilities are present in the function signature.\n- **[vulnerability: no]**\n\n```c++\nstruct usb_host_interface * alt ;\n```\n- **[logic of the code]**: A pointer to a `usb_host_interface` structure is declared.\n- **[reason for the vulnerability judgment]**: No vulnerabilities are present in this declaration.\n- **[vulnerability: no]**\n\n```c++\nalt = usb_altnum_to_altsetting ( intf , gspca_dev -> alt ) ;\n```\n- **[logic of the code]**: The `usb_altnum_to_altsetting` function is called with `intf` and `gspca_dev->alt` as arguments, and the result is assigned to `alt`.\n- **[reason for the vulnerability judgment]**: No vulnerabilities are present in this assignment. The function `usb_altnum_to_altsetting` is assumed to be correctly implemented and to return a valid pointer or `NULL`.\n- **[vulnerability: no]**\n\n```c++\nif ( ! alt ) {\npr_err ( \"Couldn't get altsetting\\n\" ) ;\nreturn - EIO ;\n```\n- **[logic of the code]**: If `alt` is `NULL`, an error message is printed, and the function returns `-EIO`.\n- **[reason for the vulnerability judgment]**: This is a proper error handling mechanism. No vulnerabilities are present here.\n- **[vulnerability: no]**\n\n```c++\nif ( alt -> desc . bNumEndpoints < 1 )\nreturn - ENODEV ;\n```\n- **[logic of the code]**: If the number of endpoints in the `alt` setting is less than 1, the function returns `-ENODEV`.\n- **[reason for the vulnerability judgment]**: This is a proper check to ensure that there is at least one endpoint. No vulnerabilities are present here.\n- **[vulnerability: no]**\n\n```c++\nreturn le16_to_cpu ( alt -> endpoint [ 0 ] . desc . wMaxPacketSize ) ;\n```\n- **[logic of the code]**: The function returns the maximum packet size of the first endpoint after converting it from little-endian to CPU byte order.\n- **[reason for the vulnerability judgment]**: This line assumes that `alt->endpoint[0]` is valid. Since the previous check ensures that `bNumEndpoints` is at least 1, this is safe. No vulnerabilities are present here.\n- **[vulnerability: no]**\n\n### Check:\n- **lines with vulnerabilities before checking**: []\n- **[condition 1]:** [analysis] All statements are considered to be executed, even if the branch conditions are not met. [whether the condition is met: yes]\n- **[condition 2]:** [analysis] There is no variable named `data` in this code slice. [whether the condition is met: yes]\n- **[condition 3]:** [analysis] Only the currently visible code logic is analyzed without speculating on potential issues or possible vulnerabilities. [whether the condition is met: yes]\n- **lines with vulnerabilities after checking**: []\n\n### final_result: **no**",
+    "vul_line_no": [],
+    "label": 0
+  }
+]
