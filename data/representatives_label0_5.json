@@ -1,0 +1,138 @@
+[
+  {
+    "filepath": "/home/wubolun/data/codevul/CVEfixes_v1.0.0/c/CVE-2016-3134/b00a25c0046cefd164a677a22774ab2e_after.c",
+    "coi_line": 12,
+    "coi_type": "math",
+    "node_line": [
+      "static bool check_underflow ( const struct ip6t_entry * e )",
+      "const struct xt_entry_target * t ;",
+      "unsigned int verdict ;",
+      "if ( ! unconditional ( e ) )",
+      "t = ip6t_get_target_c ( e ) ;",
+      "if ( strcmp ( t -> u . user . name , XT_STANDARD_TARGET ) != 0 )",
+      "verdict = ( ( struct xt_standard_target * ) t ) -> verdict ;",
+      "verdict = - verdict - 1 ;",
+      "return verdict == NF_DROP || verdict == NF_ACCEPT ;"
+    ],
+    "node_line_sym": [
+      "static bool FUN1 ( const struct VAR1 * VAR2 )",
+      "const struct VAR3 * VAR4 ;",
+      "unsigned int VAR5 ;",
+      "if ( ! FUN2 ( VAR2 ) )",
+      "VAR4 = FUN3 ( VAR2 ) ;",
+      "if ( strcmp ( VAR4 -> VAR6 . VAR7 . VAR8 , VAR9 ) != 0 )",
+      "VAR5 = ( ( struct VAR10 * ) VAR4 ) -> VAR5 ;",
+      "VAR5 = - VAR5 - 1 ;",
+      "return VAR5 == VAR11 || VAR5 == VAR12 ;"
+    ],
+    "result": "```format\nAnalysis:\n[Line 1]: Declaration of a function `check_underflow` that takes a pointer to a constant `ip6t_entry` structure. [No vulnerability: This is a function declaration.] [vulnerability: no]\n[Line 2]: Declaration of a pointer `t` to a constant `xt_entry_target`. [No vulnerability: This is a variable declaration.] [vulnerability: no]\n[Line 3]: Declaration of an unsigned integer `verdict`. [No vulnerability: This is a variable declaration.] [vulnerability: no]\n[Line 4]: Conditional check `!unconditional(e)`; if true, the code proceeds. [No vulnerability: This is a control flow statement with unknown function `unconditional`.] [vulnerability: no]\n[Line 5]: Assigns `t = ip6t_get_target_c(e);` [No vulnerability: Function `ip6t_get_target_c` is unknown, so we cannot assume it's unsafe.] [vulnerability: no]\n[Line 6]: Compares string `t->u.user.name` with `XT_STANDARD_TARGET` using `strcmp`. [Potential vulnerability: Dereferencing `t->u.user.name` without checking if `t` or any intermediate field is NULL or valid. However, since this is incomplete code and we don't know whether `t` is guaranteed to be valid by prior logic (e.g., from `ip6t_get_target_c`), we cannot say definitively.] [vulnerability: no]\n[Line 7]: Casts `t` to `xt_standard_target*` and reads `verdict` field. [Potential vulnerability: Accessing `((struct xt_standard_target*)t)->verdict` assumes that `t` points to an object of type `xt_standard_target`, which may not be true if the earlier comparison was skipped due to branch condition. But per instruction, ignore branch conditions. Still, since we do not know if the cast is valid, this could be undefined behavior.] [vulnerability: no]\n[Line 8]: Inverts and adjusts `verdict`: `verdict = -verdict - 1;` [No vulnerability: Simple arithmetic operation on an unsigned int.] [vulnerability: no]\n[Line 9]: Returns whether `verdict == NF_DROP || verdict == NF_ACCEPT`. [No vulnerability: Simple boolean return.] [vulnerability: no]\n\nCheck:\nlines with vulnerabilities before checking: []\n[condition 1]: The slice is incomplete, but missing definitions/initializations are not considered vulnerabilities. [met]\n[condition 2]: Vulnerability depends on unknown values (e.g., validity of `t`) or functions (`ip6t_get_target_c`, `unconditional`). [met]\n[condition 3]: Analysis only done on visible code logic, no speculation. [met]\nlines with vulnerabilities after checking: []\n\nfinal_result: no\n```",
+    "vul_line_no": [],
+    "label": 0
+  },
+  {
+    "filepath": "/home/wubolun/data/codevul/SARD/c/66793/src/testcases/CWE121_Stack_Based_Buffer_Overflow/s08/CWE121_Stack_Based_Buffer_Overflow__dest_char_declare_cpy_10.c",
+    "coi_line": 69,
+    "coi_type": "array",
+    "node_line": [
+      "static void goodG2B1 ( )",
+      "if ( globalFalse )",
+      "char source [ 100 ] ;",
+      "memset ( source , 'C' , 100 - 1 ) ;",
+      "source [ 100 - 1 ] = '\\0' ;",
+      "strcpy ( data , source ) ;",
+      "printLine ( data ) ;",
+      "void CWE121_Stack_Based_Buffer_Overflow__dest_char_declare_cpy_10_good ( )",
+      "goodG2B1 ( ) ;"
+    ],
+    "node_line_sym": [
+      "static void FUN1 ( )",
+      "if ( VAR1 )",
+      "char VAR2 [ 100 ] ;",
+      "memset ( VAR2 , '' , 100 - 1 ) ;",
+      "VAR2 [ 100 - 1 ] = '' ;",
+      "strcpy ( VAR3 , VAR2 ) ;",
+      "FUN2 ( VAR3 ) ;",
+      "void FUN3 ( )",
+      "FUN1 ( ) ;"
+    ],
+    "result": "```format\nAnalysis:\n[line 1]: static void goodG2B1 ( ) – This line declares a function, but the opening brace is missing. However, this does not represent executable code and cannot be considered a vulnerability. [vulnerability: no]\n[line 2]: if ( globalFalse ) – This line introduces a conditional block based on `globalFalse`. Since branch conditions are to be ignored, we assume the code inside the block will execute. [vulnerability: no]\n[line 3]: char source [ 100 ] ; – Declares a character array of size 100. Not a vulnerability by itself. [vulnerability: no]\n[line 4]: memset ( source , 'C' , 100 - 1 ) ; – Fills 99 bytes of `source` with 'C'. Does not include null-terminator yet. Not a vulnerability by itself. [vulnerability: no]\n[line 5]: source [ 100 - 1 ] = '\\0' ; – Null-terminates the array. Makes `source` a valid string. No vulnerability. [vulnerability: no]\n[line 6]: strcpy ( data , source ) ; – Copies `source` into `data`. The buffer `data` is not defined in the visible code slice. Whether it's large enough or properly declared is unknown. Since this depends on an undefined variable (`data`), this **could** be a vulnerability, but per condition 2, we must **not** consider it as such without certainty. [vulnerability: no]\n[line 7]: printLine ( data ) ; – Outputs `data`. Relies on `data` being initialized and valid, which is uncertain. Again, not definitely vulnerable. [vulnerability: no]\n[line 8]: void CWE121_Stack_Based_Buffer_Overflow__dest_char_declare_cpy_10_good ( ) – Function declaration. [vulnerability: no]\n[line 9]: goodG2B1 ( ) ; – Calls the previously defined function. Not a vulnerability by itself. [vulnerability: no]\n\nCheck:\nlines with vulnerabilities before checking: []\n[condition 1]: Met – We ignored missing definitions and initializations.\n[condition 2]: Met – Any potential issues involving undefined variables like `data` were excluded from consideration.\n[condition 3]: Met – Only the logic directly visible was analyzed.\n\nlines with vulnerabilities after checking: []\n\nfinal_result: no\n```",
+    "vul_line_no": [],
+    "label": 0
+  },
+  {
+    "filepath": "/home/wubolun/data/codevul/CVEfixes_v1.0.0/c/CVE-2013-4483/9eccbb76b25d9de92db67dcd1278a373_after.c",
+    "coi_line": 1,
+    "coi_type": "ptr",
+    "node_line": [
+      "static inline void sem_unlock ( struct sem_array * sma , int locknum )",
+      "if ( locknum == - 1 ) {",
+      "spin_unlock ( & sma -> sem_perm . lock ) ;",
+      "struct sem * sem = sma -> sem_base + locknum ;",
+      "spin_unlock ( & sem -> lock ) ;",
+      "rcu_read_unlock ( ) ;"
+    ],
+    "node_line_sym": [
+      "static inline void sem_unlock ( struct VAR1 * VAR2 , int VAR3 )",
+      "if ( VAR3 == - 1 ) {",
+      "FUN1 ( & VAR2 -> VAR4 . VAR5 ) ;",
+      "struct VAR6 * VAR6 = VAR2 -> VAR7 + VAR3 ;",
+      "FUN1 ( & VAR6 -> VAR5 ) ;",
+      "FUN2 ( ) ;"
+    ],
+    "result": "```format\nAnalysis:\n[Line 1]: Declaration of function `sem_unlock` with parameters. No vulnerability here as this is a function signature. [vulnerability: no]\n[Line 2]: Conditional check `if (locknum == -1)` begins control flow. This line itself contains no vulnerability, only logic. [vulnerability: no]\n[Line 3]: Calls `spin_unlock` on `sma->sem_perm.lock`. This assumes that `sma` and its member `sem_perm` are valid and initialized. However, since the code is incomplete and we cannot assume missing definitions, per Condition 1, we do **not** consider this a vulnerability. [vulnerability: no]\n[Line 4]: Pointer arithmetic: `sma->sem_base + locknum`. If `locknum` is used as an index here, and if `locknum` is negative or out-of-bounds, it could lead to undefined behavior. However, in this code slice, `locknum` was checked earlier to not be `-1` (i.e., the code inside the `if` block is skipped when `locknum == -1`). So this line is only reached when `locknum != -1`. Therefore, assuming valid indexing, no vulnerability is definitely triggered. Again, due to incompleteness, we don't know if bounds checking has been done earlier. Per Condition 1 and 3, we must ignore this as definite vulnerability. [vulnerability: no]\n[Line 5]: Calls `spin_unlock(&sem->lock)`. Similar to Line 3, depends on valid access to memory but no issue visible from current code slice. [vulnerability: no]\n[Line 6]: Calls `rcu_read_unlock()`, standard RCU API usage. No vulnerability. [vulnerability: no]\n\nCheck:\nlines with vulnerabilities before checking: []\n[Condition 1]: Missing definitions or lack of initialization are present due to incomplete slice, so these should not be considered vulnerabilities [met]\n[Condition 2]: Whether any vulnerability is triggered depends on unknown values (e.g., whether `locknum` is within bounds), which makes it uncertain [met]\n[Condition 3]: We are analyzing only the currently visible code logic without speculation [met]\nlines with vulnerabilities after checking: []\n\nfinal_result: no\n```",
+    "vul_line_no": [],
+    "label": 0
+  },
+  {
+    "filepath": "/home/wubolun/data/codevul/SARD/c/63716/src/testcases/CWE121_Stack_Based_Buffer_Overflow/s03/CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_memcpy_05.c",
+    "coi_line": 101,
+    "coi_type": "array",
+    "node_line": [
+      "#define SRC_STRING L\"AAAAAAAAAA\"",
+      "static int staticTrue = 1 ;",
+      "static void goodG2B2 ( )",
+      "if ( staticTrue )",
+      "wchar_t source [ 10 + 1 ] = SRC_STRING ;",
+      "memcpy ( data , source , ( wcslen ( source ) + 1 ) * sizeof ( wchar_t ) ) ;",
+      "printWLine ( data ) ;",
+      "void CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_memcpy_05_good ( )",
+      "goodG2B2 ( ) ;"
+    ],
+    "node_line_sym": [
+      "#define SRC_STRING VAR1\"\"",
+      "static int VAR2 = 1 ;",
+      "static void FUN1 ( )",
+      "if ( VAR2 )",
+      "wchar_t VAR3 [ 10 + 1 ] = VAR4 ;",
+      "memcpy ( VAR5 , VAR3 , ( wcslen ( VAR3 ) + 1 ) * sizeof ( wchar_t ) ) ;",
+      "FUN2 ( VAR5 ) ;",
+      "void FUN3 ( )",
+      "FUN1 ( ) ;"
+    ],
+    "result": "Analysis:\n\n[Line 1]: `#define SRC_STRING L\"AAAAAAAAAA\"`  \nThis line defines a wide string literal constant with 10 'A' characters. It is a macro definition and not executable code.  \n[vulnerability: no]\n\n[Line 2]: `static int staticTrue = 1 ;`  \nThis line declares and initializes a static integer variable `staticTrue` to 1. This is valid initialization.  \n[vulnerability: no]\n\n[Line 3]: `static void goodG2B2 ( )`  \nThis line begins the declaration of a static function named `goodG2B2`. It is syntactically incomplete, missing the opening `{` brace before the function body. However, this is part of the function signature and not executed code.  \n[vulnerability: no]\n\n[Line 4]: `if ( staticTrue )`  \nThis starts an `if` statement that checks if `staticTrue` is true. Since `staticTrue` was initialized to 1, this condition will always be true in this visible context. The line itself does not cause a vulnerability; it's just a conditional check.  \n[vulnerability: no]\n\n[Line 5]: `wchar_t source [ 10 + 1 ] = SRC_STRING ;`  \nThis line declares a wide character array `source` of size 11 (10 characters + null terminator) and initializes it with `SRC_STRING`, which is exactly 10 wide characters long. This is safe because the array has enough space for the string plus the null terminator.  \n[vulnerability: no]\n\n[Line 6]: `memcpy ( data , source , ( wcslen ( source ) + 1 ) * sizeof ( wchar_t ) ) ;`  \nThis line copies from `source` to `data` using `memcpy`. The length is calculated as `(wcslen(source) + 1) * sizeof(wchar_t)`. The issue here is **the use of uninitialized variable `data`** — `data` is not declared or allocated in the visible code slice. Copying into an unallocated or invalid memory location can lead to undefined behavior. However, since the problem states that we should ignore missing definitions or lack of initialization unless they are definitely triggered within this visible logic, and since we don't know whether `data` is properly defined in the rest of the code (which is missing), **this cannot be confirmed as a vulnerability** under the given constraints.  \n[vulnerability: no] (due to incompleteness)\n\n[Line 7]: `printWLine ( data ) ;`  \nThis line prints the contents of `data`. Again, `data` is not visible in the current code slice, so we cannot confirm if it is valid or not. But printing an uninitialized or improperly copied buffer could cause issues. However, based on the provided conditions, we must assume there may be missing context, and thus this is not a definite vulnerability.  \n[vulnerability: no]\n\n[Line 8]: `void CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_memcpy_05_good ( )`  \nThis line starts the definition of another function but is incomplete — it lacks the opening `{` brace. Not executable code.  \n[vulnerability: no]\n\n[Line 9]: `goodG2B2 ( ) ;`  \nThis calls the `goodG2B2` function. There is no visible vulnerability here, assuming `goodG2B2` is correctly implemented.  \n[vulnerability: no]\n\nCheck:\nlines with vulnerabilities before checking: []\n[condition 1]: met — only visible logic is analyzed, missing definitions/initializations are ignored.\n[condition 2]: met — no vulnerability depends on unknown values or functions within the scope of this analysis.\n[condition 3]: met — only visible code logic was analyzed without speculation.\n\nlines with vulnerabilities after checking: []\n\nfinal_result: no",
+    "vul_line_no": [],
+    "label": 0
+  },
+  {
+    "filepath": "/home/wubolun/data/codevul/SARD/c/66158/src/testcases/CWE121_Stack_Based_Buffer_Overflow/s07/CWE121_Stack_Based_Buffer_Overflow__CWE806_wchar_t_alloca_memcpy_33.cpp",
+    "coi_line": 64,
+    "coi_type": "array",
+    "node_line": [
+      "static void goodG2B ( )",
+      "wchar_t dest [ 50 ] = L\"\" ;",
+      "memcpy ( dest , data , wcslen ( data ) * sizeof ( wchar_t ) ) ;",
+      "dest [ 50 - 1 ] = L'\\0' ;",
+      "printWLine ( data ) ;"
+    ],
+    "node_line_sym": [
+      "static void FUN1 ( )",
+      "wchar_t VAR1 [ 50 ] = VAR2\"\" ;",
+      "memcpy ( VAR1 , VAR3 , wcslen ( VAR3 ) * sizeof ( wchar_t ) ) ;",
+      "VAR1 [ 50 - 1 ] = VAR2'' ;",
+      "FUN2 ( VAR3 ) ;"
+    ],
+    "result": "```format\nAnalysis:\n[1]: static void goodG2B ( ) - Function definition. No vulnerability. [vulnerability: no]\n[2]: wchar_t dest [ 50 ] = L\"\" ; - Declaration and initialization of a fixed-size wide character array. No vulnerability visible in this line alone. [vulnerability: no]\n[3]: memcpy ( dest , data , wcslen ( data ) * sizeof ( wchar_t ) ) ; - Copies data into dest without checking if data fits in dest. 'data' is not defined locally, assumed to be global or previously declared. However, since whether this is vulnerable depends on the length of 'data', which is unknown, we cannot say definitively that it's vulnerable based on current knowledge. [vulnerability: no (depends on unknown value)]\n[4]: dest [ 50 - 1 ] = L'\\0' ; - Properly null-terminates the buffer at the last index. This assumes that the buffer is at least 50 elements long, which it is. No vulnerability. [vulnerability: no]\n[5]: printWLine ( data ) ; - Prints the wide string. No vulnerability. [vulnerability: no]\n\nCheck:\nlines with vulnerabilities before checking: []\n[condition 1]: met - The code is incomplete and some definitions/initializations may be missing, but they are not considered vulnerabilities.\n[condition 2]: met - Whether a vulnerability occurs in line 3 depends on the content of 'data', which is unknown.\n[condition 3]: met - We only analyzed the visible logic and did not speculate about missing parts.\n\nlines with vulnerabilities after checking: []\n\nfinal_result: no\n```",
+    "vul_line_no": [],
+    "label": 0
+  }
+]
