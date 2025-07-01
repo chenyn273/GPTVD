@@ -400,15 +400,3 @@ if __name__ == "__main__":
 
     print("\n示例运行完毕。")
 
-    n = 25
-
-    model_name = "microsoft/codebert-base"
-    main(
-        input_json_path=input_json,
-        output_dir=output_dir,
-        n_clusters_label0=n,
-        n_clusters_label1=n,
-        pretrained_model=model_name,
-    )
-
-    print("\n示例运行完毕。")
