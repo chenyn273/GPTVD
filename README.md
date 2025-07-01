@@ -24,7 +24,7 @@ Contains all of the Python code used to run and analyze the GPTVD:
 ### `data/`
 Holds the handcrafted prompt samples and the pre-trained clustering models:
 - **`*.json` files**  
-  - `train_part.json`, `val_part.json`: used for training and validation.  
+  - `val_part.json`: some test results.
   - `representatives_label*.json`: the representative examples selected for each cluster label.
 - **`*.pkl` files**  
   - `kmeans_label*.pkl`: pre-trained K-means models for each setting of the number of clusters.
